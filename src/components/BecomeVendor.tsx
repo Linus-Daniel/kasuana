@@ -1,9 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
+
+interface VendorFormData {
+  fullName: string;
+  phone: string;
+  institution: string;
+  businessType: string;
+  businessName: string;
+  flyer: File | null;
+}
 
 export default function BecomeVendorSection() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<VendorFormData>({
     fullName: "",
     phone: "",
     institution: "",
@@ -12,18 +21,20 @@ export default function BecomeVendorSection() {
     flyer: null,
   });
 
-  const handleChange = (e) => {
-    const { id, value, files } = e.target;
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { id, value, files } = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       [id]: files ? files[0] : value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here (e.g., send to an API or Firebase)
     console.log(formData);
+    // TODO: Submit to API
   };
 
   return (
@@ -35,59 +46,42 @@ export default function BecomeVendorSection() {
           </h2>
           <p className="text-lg text-deep-brown mb-8 text-center">
             Become part of our growing community of entrepreneurs and gain
-            visibility for your business. It's free to join!
+            visibility for your business. It&apos;s free to join!
           </p>
 
           <div className="bg-beige rounded-lg shadow-md p-8">
             <form id="vendor-form" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label
-                    htmlFor="fullName"
-                    className="block text-deep-brown font-medium mb-2"
-                  >
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-deep-brown font-medium mb-2"
-                  >
-                    Phone / WhatsApp Number
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="institution"
-                    className="block text-deep-brown font-medium mb-2"
-                  >
-                    School / Institution
-                  </label>
-                  <input
-                    type="text"
-                    id="institution"
-                    value={formData.institution}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
+                {[
+                  { id: "fullName", label: "Full Name", type: "text" },
+                  {
+                    id: "phone",
+                    label: "Phone / WhatsApp Number",
+                    type: "tel",
+                  },
+                  {
+                    id: "institution",
+                    label: "School / Institution",
+                    type: "text",
+                  },
+                  { id: "businessName", label: "Business Name", type: "text" },
+                ].map(({ id, label, type }) => (
+                  <div key={id}>
+                    <label
+                      htmlFor={id}
+                      className="block text-deep-brown font-medium mb-2"
+                    >
+                      {label}
+                    </label>
+                    <input
+                      type={type}
+                      id={id}
+                      value={(formData as any)[id]}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+                ))}
 
                 <div>
                   <label
@@ -111,22 +105,6 @@ export default function BecomeVendorSection() {
                     <option value="services">Services</option>
                     <option value="other">Other</option>
                   </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="businessName"
-                    className="block text-deep-brown font-medium mb-2"
-                  >
-                    Business Name
-                  </label>
-                  <input
-                    type="text"
-                    id="businessName"
-                    value={formData.businessName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
                 </div>
 
                 <div>

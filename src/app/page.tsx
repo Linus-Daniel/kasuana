@@ -1,17 +1,16 @@
 // pages/index.js
-import About from "@/compoonents/About";
-import BecomeVendorSection from "@/compoonents/BecomeVendor";
-import ContactSection from "@/compoonents/Contacts";
-import Footer from "@/compoonents/Footer";
-import Header from "@/compoonents/Header";
-import Hero from "@/compoonents/Hero";
-import TagLine from "@/compoonents/TagLine";
-import TeamSection from "@/compoonents/Team";
-import TractionSection from "@/compoonents/Traction";
-import Vendors from "@/compoonents/Vendors";
-import WhyKasuana from "@/compoonents/Why-Us";
+import About from "@/components/About";
+import BecomeVendorSection from "@/components/BecomeVendor";
+import ContactSection from "@/components/Contacts";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import TagLine from "@/components/TagLine";
+import TeamSection from "@/components/Team";
+import TractionSection from "@/components/Traction";
+import Vendors from "@/components/Vendors";
+import WhyKasuana from "@/components/Why-Us";
 import Head from "next/head";
-
 
 export default function Home() {
   return (

@@ -2,7 +2,7 @@ import { NextResponse,NextRequest } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import Vendor from "@/model/Vendor";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     try{
 
         const body = await req.json();
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         await dbConnect();
         const vendors = await Vendor.find().sort({ createdAt: -1 });

@@ -2,15 +2,16 @@ import { NextResponse, NextRequest } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
 import Team from "@/model/Team";
 
-export async function POST (req:NextRequest, res:NextResponse){
+export async function POST (req:NextRequest){
     try {
         await dbConnect();
         const body = await req.json();
-        const { name, role, description, avatar } = body;
+        const { name, role, description, image, isCoFounder } = body;
     
-        if (!name || !role || !description || !avatar) {
+        if (!name || !role || !description || !image) {
         return NextResponse.json(
             { error: "All fields are required" },
+        
             { status: 400 }
         );
         }
@@ -19,7 +20,8 @@ export async function POST (req:NextRequest, res:NextResponse){
         name,
         role,
         description,
-        avatar,
+        image,
+        isCoFounder: isCoFounder || false,
         createdAt: new Date(),
         updatedAt: new Date(),
         };
@@ -38,7 +40,7 @@ export async function POST (req:NextRequest, res:NextResponse){
 
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         await dbConnect();
         const teamMembers = await Team.find().sort({ createdAt: -1 });

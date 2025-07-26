@@ -3,29 +3,41 @@ import mongoose from "mongoose";
 const mongoDBUri =
   process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kasuana";
 
-// Global cache to prevent multiple connections in development
-let cached = (global as any).mongoose;
+if (!mongoDBUri) {
+  throw new Error("❌ MONGODB_URI is not defined in .env");
+}
 
-if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
+const globalWithMongoose = global as typeof globalThis & {
+  mongoose: MongooseCache;
+};
+
+if (!globalWithMongoose.mongoose) {
+  globalWithMongoose.mongoose = { conn: null, promise: null };
 }
 
 export async function dbConnect() {
+  const cached = globalWithMongoose.mongoose;
+
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(mongoDBUri)
-      .then((mongooseInstance) => {
-        console.log("✅ MongoDB connected successfully");
-        return mongooseInstance;
-      })
-      .catch((error) => {
-        console.error("❌ MongoDB connection error:", error);
-        throw new Error("Failed to connect to MongoDB");
-      });
+    cached.promise = mongoose.connect(mongoDBUri, {
+      bufferCommands: false,
+    });
   }
 
-  cached.conn = await cached.promise;
+  try {
+    cached.conn = await cached.promise;
+    console.log("✅ MongoDB connected successfully");
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    throw err;
+  }
+
   return cached.conn;
 }

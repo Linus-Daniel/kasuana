@@ -1,12 +1,12 @@
-import mongoose, { model, Schema, Document, models } from "mongoose";
+import  { model, Schema, models } from "mongoose";
 
 export interface ITeam {
   name: string;
   role: string;
   description: string;
-  avatar: string;
+  image: string;
   createdAt: Date;
-  isCoFounder:boolean;
+  isCoFounder: boolean;
   updatedAt: Date;
 }
 
@@ -27,7 +27,7 @@ const TeamSchema = new Schema<ITeam>(
       required: true,
       trim: true,
     },
-    avatar: {
+    image: {
       type: String,
       required: true,
       trim: true,
@@ -40,10 +40,10 @@ const TeamSchema = new Schema<ITeam>(
       type: Date,
       default: Date.now,
     },
-    isCoFounder:{
-        type:Boolean,
-        required:true
-    }
+    isCoFounder: {
+      type: Boolean,
+      required: true,
+    },
   },
   { timestamps: true }
 );
