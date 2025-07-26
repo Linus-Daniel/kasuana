@@ -12,7 +12,7 @@ export default function TractionSection() {
   return (
     <section id="traction" className="py-16 bg-beige">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center text-primary mb-12">
+        <h2 className="text-3xl font-bold text-center text-custom mb-12">
           Our Progress So Far
         </h2>
 

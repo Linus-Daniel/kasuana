@@ -13,7 +13,7 @@ export default function Hero() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0">
-            <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-custom mb-4 leading-tight">
               Building Africa's Grassroots Trade Network
             </h1>
             <p className="text-deep-brown text-lg mb-8">

@@ -34,19 +34,17 @@ export default function TeamSection() {
       try {
         const response = await api.get("/teams");
         const data = response.data;
-        const founders = data.filter((member: TeamMember) => member.isCoFounder);
-        const coreTeam = data.filter((member:TeamMember)=> !member.isCoFounder)
-        console.log("our Teams", coreTeam)
-        console.log("our Co-Founders", founders)
+        const founders = data.filter(
+          (member: TeamMember) => member.isCoFounder
+        );
+        const coreTeam = data.filter(
+          (member: TeamMember) => !member.isCoFounder
+        );
         const teamData = {
           founders,
           coreTeam,
-        }
-        setTeamData(teamData)
-
-    
-
-   
+        };
+        setTeamData(teamData);
 
         // setTeamData(transformedData);
       } catch (err) {
@@ -83,7 +81,7 @@ export default function TeamSection() {
   return (
     <section id="team" className="py-16 bg-warm-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center text-primary mb-12">
+        <h2 className="text-3xl font-bold text-center text-custom mb-12">
           Our Team
         </h2>
 
@@ -93,9 +91,9 @@ export default function TeamSection() {
               Founders
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-              {teamData.founders.map((founder) => (
+              {teamData.founders.map((founder,index) => (
                 <div
-                  key={founder.id}
+                  key={index}
                   className="bg-white rounded-lg shadow-md overflow-hidden"
                 >
                   <div className="h-64 bg-beige">
@@ -103,7 +101,7 @@ export default function TeamSection() {
                       width="600"
                       height="400"
                       src={founder.image}
-                      alt={founder.alt}
+                      alt={founder.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -132,9 +130,9 @@ export default function TeamSection() {
               Core Team
             </h3>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              {teamData.coreTeam.map((member) => (
+              {teamData.coreTeam.map((member,index) => (
                 <div
-                  key={member.id}
+                  key={index}
                   className="bg-white rounded-lg shadow-md p-4 text-center"
                 >
                   <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full overflow-hidden mb-4">
@@ -142,7 +140,7 @@ export default function TeamSection() {
                       width="200"
                       height="200"
                       src={member.image}
-                      alt={member.alt}
+                      alt={member.name}
                       className="w-full h-full object-cover"
                     />
                   </div>

@@ -5,7 +5,7 @@ export interface IVendor extends Document {
   email: string;
   phone: string;
   address: string;
-  story:string;
+  description:string;
   image:string;
   verified: boolean;
     socialLinks: {
@@ -31,7 +31,7 @@ const VendorSchema = new Schema<IVendor>({
         trim: true,
         lowercase: true
     },
-    story: {
+    description: {
         type: String,
         required: true,
         trim: true

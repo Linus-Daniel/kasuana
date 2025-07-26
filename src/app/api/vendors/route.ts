@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
 
         const body = await req.json();
         await dbConnect();
-        const { name, email, story, image, verified, socialLinks, phone, address } = body;
-        if (!name || !email || !story || !image || !phone || !address) {
+        const { name, email, description, image, verified, socialLinks, phone, address } = body;
+        if (!name || !email || !description || !image || !phone || !address) {
             return NextResponse.json(
                 { error: "All fields are required" },
                 { status: 400 }
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
         const newVendor = {
             name,
             email,
-            story,
+            description,
             image,
             verified: verified || false,
             socialLinks: socialLinks || {},

@@ -9,6 +9,7 @@
   --beige: #f8e9cf;
   --soft-yellow: #f5d189;
   --warm-white: #fbf6ee;
+  --custom: #6B7162
 }
 
 @theme inline {
@@ -22,6 +23,7 @@
   --color-beige: var(--beige);
   --color-soft-yellow: var(--soft-yellow);
   --color-warm-white: var(--warm-white);
+  --color-custom: var(--custom);
 }
 
 @media (prefers-color-scheme: dark) {

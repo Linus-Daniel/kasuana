@@ -9,7 +9,7 @@ export default function About() {
     <section id="about" className="py-16 bg-beige">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-primary mb-8">
+          <h2 className="text-3xl font-bold text-center text-custom mb-8">
             Who We Are
           </h2>
           <p className="text-lg text-deep-brown mb-8 text-center">
