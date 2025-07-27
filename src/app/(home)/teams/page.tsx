@@ -1,4 +1,3 @@
-// app/team/page.tsx
 "use client";
 import { CldImage } from "next-cloudinary";
 import api from "@/lib/axiosInstance";
@@ -10,9 +9,6 @@ interface TeamMember {
   role: string;
   description: string;
   image: string;
-  alt: string;
-  bgColor: string;
-  textColor: string;
   isCoFounder?: boolean;
 }
 
@@ -54,31 +50,44 @@ export default function TeamPage() {
           {teamData.map((member) => (
             <div
               key={member.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+              className={`bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-transform transform hover:scale-105 ${
+                member.isCoFounder ? "border-4 border-primary" : ""
+              }`}
             >
-              <div className="h-64 bg-beige relative">
-                <CldImage
-                  fill
-                  src={member.image}
-                  alt={member.alt}
-                  className="object-cover"
-                />
-                {member.isCoFounder && (
-                  <span className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm">
-                    Co-Founder
-                  </span>
-                )}
-              </div>
-              <div className="p-6">
-                <h2 className="text-xl font-bold text-deep-brown mb-2">
+              <div className="flex flex-col items-center p-6">
+                <div className="w-40 h-40 relative mb-4">
+                  <CldImage
+                    width={160}
+                    height={160}
+                    src={member.image}
+                    alt={member.name}
+                    className="rounded-full object-cover mx-auto"
+                  />
+                  {member.isCoFounder && (
+                    <span className="absolute -top-2 -right-2 bg-primary text-white px-3 py-1 rounded-full text-xs shadow-md">
+                      Co-Founder
+                    </span>
+                  )}
+                </div>
+                <h2
+                  className={`text-xl font-bold mb-2 ${
+                    member.isCoFounder ? "text-primary" : "text-deep-brown"
+                  }`}
+                >
                   {member.name}
                 </h2>
                 <div
-                  className={`inline-block px-3 py-1 ${member.bgColor} ${member.textColor} rounded-full text-sm mb-4`}
+                  className={`inline-block px-3 py-1 rounded-full text-sm mb-4 ${
+                    member.isCoFounder
+                      ? "bg-primary text-white"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
                 >
                   {member.role}
                 </div>
-                <p className="text-gray-700">{member.description}</p>
+                <p className="text-center text-gray-700">
+                  {member.description}
+                </p>
               </div>
             </div>
           ))}
