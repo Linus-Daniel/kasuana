@@ -37,7 +37,7 @@ export default function TractionSection() {
             id="stat-3"
             className="bg-soft-yellow text-deep-brown rounded-lg p-6 text-center shadow-md"
           >
-            <p className="text-4xl font-bold mb-2">50+</p>
+            <p className="text-4xl font-bold mb-2">40+</p>
             <p className="mt-2">Verified Vendors</p>
           </div>
           <div

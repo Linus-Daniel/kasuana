@@ -1,6 +1,14 @@
 "use client";
 
-import { FaEnvelope, FaWhatsapp, FaLocationDot } from "react-icons/fa6";
+import {
+  FaEnvelope,
+  FaWhatsapp,
+  FaLocationDot,
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaXTwitter,
+} from "react-icons/fa6";
 
 const ContactSection = () => {
   return (
@@ -86,7 +94,7 @@ const ContactSection = () => {
                     </div>
                   </div>
 
-                  {/* WhatsApp */}
+                  {/* WhatsApp Community */}
                   <div className="flex items-start">
                     <div className="w-10 h-10 rounded-full bg-soft-yellow flex items-center justify-center mr-4">
                       <FaWhatsapp className="text-deep-brown" />
@@ -95,10 +103,15 @@ const ContactSection = () => {
                       <h4 className="font-semibold text-deep-brown">
                         WhatsApp
                       </h4>
-                      <span className="px-4 py-2 bg-olive-green text-white rounded-full text-sm inline-flex items-center mt-1 hover:bg-deep-brown transition duration-300 cursor-pointer">
+                      <a
+                        href="https://chat.whatsapp.com/LuXKum1nuDhLrDS2JUqt5y?mode=ac_t"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-4 py-2 bg-olive-green text-white rounded-full text-sm mt-1 hover:bg-deep-brown transition duration-300"
+                      >
                         <FaWhatsapp className="mr-2" />
-                        Message Us
-                      </span>
+                        Join Community
+                      </a>
                     </div>
                   </div>
 
@@ -116,6 +129,48 @@ const ContactSection = () => {
                       </p>
                     </div>
                   </div>
+
+                  {/* Social Links */}
+                  <div className="mt-6 space-y-2">
+                    <h4 className="font-semibold text-deep-brown">Socials</h4>
+                    <div className="flex flex-wrap gap-4 text-xl text-deep-brown">
+                      <a
+                        href="https://www.facebook.com/profile.php?id=61576113337427"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaFacebook />
+                      </a>
+                      <a
+                        href="https://x.com/Kasuanatradenet?t=qvZbgYC9B3awhYVdoPLa9w&s=09"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaXTwitter />
+                      </a>
+                      <a
+                        href="https://www.instagram.com/kasuanatradenetwork?igsh=MTc2azI2ZnN2dWg5bQ=="
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaInstagram />
+                      </a>
+                      <a
+                        href="https://www.linkedin.com/company/kasuanatradenetwork/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaLinkedin />
+                      </a>
+                      <a
+                        href="https://whatsapp.com/channel/0029Vb5wOq335fLyhOGwyI0S"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaWhatsapp />
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -128,9 +183,12 @@ const ContactSection = () => {
                   We're open to partnerships and investments to scale our impact
                   across Africa.
                 </p>
-                <span className="inline-block px-6 py-3 bg-white text-primary rounded-full font-medium hover:bg-soft-yellow transition duration-300 cursor-pointer">
+                <a
+                  href="mailto:info@kasuanatradenetwork.com"
+                  className="inline-block px-6 py-3 bg-white text-primary rounded-full font-medium hover:bg-soft-yellow transition duration-300"
+                >
                   Email Our Investment Team
-                </span>
+                </a>
               </div>
             </div>
           </div>
