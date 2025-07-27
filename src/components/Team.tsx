@@ -1,29 +1,37 @@
-// components/TeamPreview.tsx
 "use client";
+
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 
-interface TeamMember {
+export interface TeamMember {
   id: string;
   name: string;
   role: string;
   description: string;
   image: string;
-  alt: string;
-  bgColor: string;
-  textColor: string;
   isCoFounder?: boolean;
 }
 
-export default function TeamPreview({ members }: { members: TeamMember[] }) {
-  const displayedMembers = members.slice(0, 4);
+interface TeamPreviewProps {
+  members: TeamMember[];
+  maxDisplayCount?: number; // Optional control for how many to show
+}
+
+export default function TeamPreview({
+  members,
+  maxDisplayCount = 4,
+}: TeamPreviewProps) {
+  const coFounders = members.filter((m) => m.isCoFounder);
+  const others = members.filter((m) => !m.isCoFounder);
+
+  const displayedMembers = [...coFounders, ...others].slice(0, maxDisplayCount);
 
   return (
     <section id="team-preview" className="py-16 bg-warm-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-custom">Our Team</h2>
-          <Link href="/team" className="text-primary hover:underline">
+          <Link href="/teams" className="text-primary hover:underline">
             View All Team Members →
           </Link>
         </div>
@@ -43,14 +51,17 @@ export default function TeamPreview({ members }: { members: TeamMember[] }) {
                   className="w-full h-full object-cover"
                 />
               </div>
+
               <h3 className="font-semibold text-deep-brown text-lg">
                 {member.name}
               </h3>
-              <div
-                className={`inline-block px-3 py-1 ${member.bgColor} ${member.textColor} text-sm rounded-full my-2`}
-              >
-                {member.role}
-              </div>
+
+              {member.isCoFounder && (
+                <span className="inline-block px-3 py-1 bg-primary text-white text-sm rounded-full my-2">
+                  Co-Founder
+                </span>
+              )}
+
               <p className="text-gray-600 text-sm line-clamp-2">
                 {member.description}
               </p>
