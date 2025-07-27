@@ -62,6 +62,21 @@ const AdminDashboard = () => {
     fetchData();
   }, [activeTab]);
 
+   const handleDeleteTeam = async (id: string) => {
+     const yes = window.confirm("Delete this team member permanently?");
+     if (!yes) return;
+
+     try {
+       await api.delete("/teams", { params: { id } });
+
+       // remove from UI
+       setData((prev) => prev.filter((m) => m._id !== id));
+     } catch (err) {
+       console.error("Failed to delete team member:", err);
+       alert("Failed to delete team member. Please try again.");
+     }
+   };
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -235,7 +250,7 @@ const AdminDashboard = () => {
                 </button>
               </div>
             ) : activeTab === "teams" ? (
-              <TeamGrid data={data} />
+              <TeamGrid data={data} onDelete={handleDeleteTeam} />
             ) : (
               <VendorGrid data={data} />
             )}
@@ -494,7 +509,14 @@ const AdminDashboard = () => {
 };
 
 // Team Grid Component
-const TeamGrid = ({ data }: { data: any[] }) => {
+// Team Grid Component
+const TeamGrid = ({
+  data,
+  onDelete,
+}: {
+  data: any[];
+  onDelete: (id: string) => Promise<void> | void;
+}) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
       {data?.map((item) => (
@@ -508,7 +530,7 @@ const TeamGrid = ({ data }: { data: any[] }) => {
                 <CldImage
                   width="120"
                   height="120"
-                  src={item.avatar}
+                  src={item.avatar ?? item.image} // just in case your field is image
                   alt={item.name}
                   className="rounded-full object-cover w-20 h-20 sm:w-24 sm:h-24 border-2 border-[#F25822]"
                 />
@@ -533,7 +555,10 @@ const TeamGrid = ({ data }: { data: any[] }) => {
             <button className="text-xs sm:text-sm text-[#F25822] hover:underline">
               Edit
             </button>
-            <button className="text-xs sm:text-sm text-gray-500 hover:text-red-500">
+            <button
+              className="text-xs sm:text-sm text-gray-500 hover:text-red-500"
+              onClick={() => onDelete(item._id)}
+            >
               Delete
             </button>
           </div>

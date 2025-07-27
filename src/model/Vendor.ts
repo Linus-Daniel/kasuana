@@ -26,7 +26,7 @@ const VendorSchema = new Schema<IVendor>({
     },
     email: {
         type: String,
-        required: true,
+        required: false,
         unique: true,
         trim: true,
         lowercase: true
