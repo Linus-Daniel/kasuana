@@ -1,4 +1,5 @@
-// components/Footer.js
+"use client";
+import Link from "next/link";
 import {
   FaWhatsapp,
   FaInstagram,
@@ -13,6 +14,7 @@ export default function Footer() {
     <footer id="footer" className="bg-deep-brown text-white pt-12 pb-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          {/* Kasuana Description + Social Icons */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-soft-yellow">
               Kasuana Trade Network
@@ -21,100 +23,176 @@ export default function Footer() {
               "Your Everyday Market, Built for You, Owned by You"
             </p>
             <div className="flex space-x-4">
-              <span className="text-soft-yellow hover:text-white transition duration-300 cursor-pointer">
+              <a
+                href="https://whatsapp.com/channel/0029Vb5wOq335fLyhOGwyI0S"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-soft-yellow hover:text-white transition duration-300"
+              >
                 <FaWhatsapp className="text-xl" />
-              </span>
-              <span className="text-soft-yellow hover:text-white transition duration-300 cursor-pointer">
+              </a>
+              <a
+                href="https://www.instagram.com/kasuanatradenetwork?igsh=MTc2azI2ZnN2dWg5bQ=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-soft-yellow hover:text-white transition duration-300"
+              >
                 <FaInstagram className="text-xl" />
-              </span>
-              <span className="text-soft-yellow hover:text-white transition duration-300 cursor-pointer">
+              </a>
+              <a
+                href="https://x.com/Kasuanatradenet?t=qvZbgYC9B3awhYVdoPLa9w&s=09"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-soft-yellow hover:text-white transition duration-300"
+              >
                 <FaXTwitter className="text-xl" />
-              </span>
-              <span className="text-soft-yellow hover:text-white transition duration-300 cursor-pointer">
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61576113337427"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-soft-yellow hover:text-white transition duration-300"
+              >
                 <FaFacebook className="text-xl" />
-              </span>
-              <span className="text-soft-yellow hover:text-white transition duration-300 cursor-pointer">
+              </a>
+              <a
+                href="https://www.youtube.com/@kasuanatradenetwork"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-soft-yellow hover:text-white transition duration-300"
+              >
                 <FaYoutube className="text-xl" />
-              </span>
+              </a>
             </div>
           </div>
 
+          {/* Quick Links */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-soft-yellow">
               Quick Links
             </h3>
             <ul className="space-y-2">
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <Link
+                  href="/#home"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Home
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <Link
+                  href="/#about"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   About
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <Link
+                  href="/teams"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Team
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <Link
+                  href="/#traction"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Community
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <Link
+                  href="/#become-a-vendors"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Vendor Form
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <Link
+                  href="/#contact"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Contact
-                </span>
+                </Link>
               </li>
             </ul>
           </div>
 
+          {/* Follow Us */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-soft-yellow">
               Follow Us
             </h3>
             <ul className="space-y-2">
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
-                  WhatsApp Channel
-                </span>
+                <a
+                  href="https://chat.whatsapp.com/LuXKum1nuDhLrDS2JUqt5y?mode=ac_t"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
+                  WhatsApp Community
+                </a>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <a
+                  href="https://www.instagram.com/kasuanatradenetwork?igsh=MTc2azI2ZnN2dWg5bQ=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Instagram
-                </span>
+                </a>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <a
+                  href="https://x.com/Kasuanatradenet?t=qvZbgYC9B3awhYVdoPLa9w&s=09"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Twitter (X)
-                </span>
+                </a>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61576113337427"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   Facebook
-                </span>
+                </a>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <a
+                  href="https://www.youtube.com/@kasuanatradenetwork"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   YouTube
-                </span>
+                </a>
               </li>
               <li>
-                <span className="text-white opacity-80 hover:opacity-100 transition duration-300 cursor-pointer">
+                <a
+                  href="https://www.linkedin.com/company/kasuanatradenetwork/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white opacity-80 hover:opacity-100 transition duration-300"
+                >
                   LinkedIn
-                </span>
+                </a>
               </li>
             </ul>
           </div>
 
+          {/* Subscribe */}
           <div>
             <h3 className="text-xl font-semibold mb-4 text-soft-yellow">
               Subscribe
@@ -140,18 +218,25 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Footer Bottom */}
         <div className="border-t border-gray-700 pt-6 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-white opacity-80 text-sm mb-4 md:mb-0">
               © 2025 Kasuana Trade Network. All rights reserved.
             </p>
             <div className="flex space-x-6">
-              <span className="text-white opacity-80 hover:opacity-100 text-sm transition duration-300 cursor-pointer">
+              <Link
+                href="/terms"
+                className="text-white opacity-80 hover:opacity-100 text-sm transition duration-300"
+              >
                 Terms of Use
-              </span>
-              <span className="text-white opacity-80 hover:opacity-100 text-sm transition duration-300 cursor-pointer">
+              </Link>
+              <Link
+                href="/privacy"
+                className="text-white opacity-80 hover:opacity-100 text-sm transition duration-300"
+              >
                 Privacy Policy
-              </span>
+              </Link>
             </div>
           </div>
         </div>

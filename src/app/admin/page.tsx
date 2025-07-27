@@ -196,50 +196,51 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-64 pt-16 lg:pt-0">
-        <div className="p-4 sm:p-6">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 sm:mb-8">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
-                {activeTab}
-              </h1>
-              <p className="text-gray-500 text-sm sm:text-base">
-                Manage your {activeTab === "teams" ? "team members" : "vendors"}
-              </p>
-            </div>
-            <button
-              onClick={() => setShowModal(true)}
-              className="mt-4 md:mt-0 flex items-center bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
-            >
-              <FiPlus className="mr-2" />
-              Add {activeTab === "teams" ? "Team Member" : "Vendor"}
-            </button>
-          </div>
-
-          {/* Content */}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25822]"></div>
-            </div>
-          ) : data.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center">
-              <p className="text-gray-500">No {activeTab} found</p>
+        <main className="lg:ml-64 pt-16 lg:pt-0">
+          <div className="p-4 sm:p-6">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 sm:mb-8">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
+                  {activeTab}
+                </h1>
+                <p className="text-gray-500 text-sm sm:text-base">
+                  Manage your{" "}
+                  {activeTab === "teams" ? "team members" : "vendors"}
+                </p>
+              </div>
               <button
                 onClick={() => setShowModal(true)}
-                className="mt-4 bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
+                className="mt-4 md:mt-0 flex items-center bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
               >
-                Create your first{" "}
-                {activeTab === "teams" ? "team member" : "vendor"}
+                <FiPlus className="mr-2" />
+                Add {activeTab === "teams" ? "Team Member" : "Vendor"}
               </button>
             </div>
-          ) : activeTab === "teams" ? (
-            <TeamGrid data={data} />
-          ) : (
-            <VendorGrid data={data} />
-          )}
-        </div>
-      </main>
+
+            {/* Content */}
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25822]"></div>
+              </div>
+            ) : data.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center">
+                <p className="text-gray-500">No {activeTab} found</p>
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="mt-4 bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
+                >
+                  Create your first{" "}
+                  {activeTab === "teams" ? "team member" : "vendor"}
+                </button>
+              </div>
+            ) : activeTab === "teams" ? (
+              <TeamGrid data={data} />
+            ) : (
+              <VendorGrid data={data} />
+            )}
+          </div>
+        </main>
 
       {/* Modal */}
       {showModal && (

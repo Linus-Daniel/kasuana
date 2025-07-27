@@ -52,7 +52,7 @@ export default function Hero() {
               className="flex flex-wrap justify-center md:justify-start gap-4"
             >
               <motion.a
-                href="https://whatsapp.com/channel/0029Vb5wOq335fLyhOGwyI0S"
+                href="https://chat.whatsapp.com/LuXKum1nuDhLrDS2JUqt5y?mode=ac_t"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-deep-brown transition duration-300 flex items-center cursor-pointer"
