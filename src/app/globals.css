@@ -45,3 +45,10 @@ input{
   padding: 0.5rem;
   border-radius: 0.25rem;
 }
+
+textarea {
+  color: var(--background);
+  border: 1px solid var(--deep-brown);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
