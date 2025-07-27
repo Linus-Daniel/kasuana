@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const mongoDBUri =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/kasuana";
+  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/kasuana";
 
 if (!mongoDBUri) {
   throw new Error("❌ MONGODB_URI is not defined in .env");

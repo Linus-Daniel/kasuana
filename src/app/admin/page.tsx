@@ -1,4 +1,5 @@
-"use client"
+"use client";
+import api from "@/lib/axiosInstance";
 import { CldUploadWidget, CldImage } from "next-cloudinary";
 import { useState, useEffect } from "react";
 import {
@@ -25,9 +26,10 @@ const AdminDashboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const endpoint = activeTab === "teams" ? "/api/teams" : "/api/vendors";
-        const res = await fetch(endpoint);
-        const data = await res.json();
+        const endpoint = activeTab === "teams" ? "/teams" : "/vendors";
+        const res = await api.get(endpoint);
+        console.log(res)
+        const data = await res.data;
         setData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -79,6 +81,11 @@ const AdminDashboard = () => {
     setImageUrl("");
   };
 
+  const handleTabChange = (tab: "teams" | "vendors") => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false); // Close sidebar on mobile when tab is changed
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Sidebar Toggle */}
@@ -87,6 +94,7 @@ const AdminDashboard = () => {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="text-gray-600"
+            aria-label="Toggle menu"
           >
             <HiOutlineMenuAlt2 size={24} />
           </button>
@@ -99,40 +107,46 @@ const AdminDashboard = () => {
       <aside
         className={`fixed top-0 left-0 bottom-0 w-64 bg-white shadow-lg transform ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 transition-transform duration-200 z-20`}
+        } lg:translate-x-0 transition-transform duration-200 ease-in-out z-20`}
       >
         <div className="p-6 border-b border-gray-100">
           <h2 className="text-xl font-bold text-[#F25822]">Admin Panel</h2>
         </div>
         <nav className="p-4">
           <button
-            onClick={() => setActiveTab("teams")}
+            onClick={() => handleTabChange("teams")}
             className={`flex items-center w-full p-3 rounded-lg mb-2 ${
               activeTab === "teams"
                 ? "bg-[#F25822]/10 text-[#F25822]"
                 : "text-gray-600 hover:bg-gray-100"
-            }`}
+            } transition-colors duration-200`}
           >
             <FiUsers className="mr-3" />
             <span>Team Members</span>
           </button>
           <button
-            onClick={() => setActiveTab("vendors")}
+            onClick={() => handleTabChange("vendors")}
             className={`flex items-center w-full p-3 rounded-lg mb-2 ${
               activeTab === "vendors"
                 ? "bg-[#F25822]/10 text-[#F25822]"
                 : "text-gray-600 hover:bg-gray-100"
-            }`}
+            } transition-colors duration-200`}
           >
             <FiTruck className="mr-3" />
             <span>Vendors</span>
           </button>
           <div className="mt-8 pt-4 border-t border-gray-100">
-            <button className="flex items-center w-full p-3 rounded-lg text-gray-600 hover:bg-gray-100">
+            <button
+              className="flex items-center w-full p-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <FiSettings className="mr-3" />
               <span>Settings</span>
             </button>
-            <button className="flex items-center w-full p-3 rounded-lg text-gray-600 hover:bg-gray-100">
+            <button
+              className="flex items-center w-full p-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <FiLogOut className="mr-3" />
               <span>Logout</span>
             </button>
@@ -142,20 +156,20 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <main className="lg:ml-64 pt-16 lg:pt-0">
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 sm:mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800 capitalize">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
                 {activeTab}
               </h1>
-              <p className="text-gray-500">
+              <p className="text-gray-500 text-sm sm:text-base">
                 Manage your {activeTab === "teams" ? "team members" : "vendors"}
               </p>
             </div>
             <button
               onClick={() => setShowModal(true)}
-              className="mt-4 md:mt-0 flex items-center bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors"
+              className="mt-4 md:mt-0 flex items-center bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
             >
               <FiPlus className="mr-2" />
               Add {activeTab === "teams" ? "Team Member" : "Vendor"}
@@ -168,11 +182,11 @@ const AdminDashboard = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25822]"></div>
             </div>
           ) : data.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+            <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center">
               <p className="text-gray-500">No {activeTab} found</p>
               <button
                 onClick={() => setShowModal(true)}
-                className="mt-4 bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors"
+                className="mt-4 bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
               >
                 Create your first{" "}
                 {activeTab === "teams" ? "team member" : "vendor"}
@@ -190,8 +204,8 @@ const AdminDashboard = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-30 p-4">
           <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-xl font-bold text-gray-800">
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800">
                 Add {activeTab === "teams" ? "Team Member" : "Vendor"}
               </h2>
               <button
@@ -200,12 +214,13 @@ const AdminDashboard = () => {
                   resetForm();
                 }}
                 className="text-gray-400 hover:text-gray-600"
+                aria-label="Close modal"
               >
                 <FiX size={24} />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6">
               {/* Image Upload */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -225,6 +240,7 @@ const AdminDashboard = () => {
                         type="button"
                         onClick={() => setImageUrl("")}
                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                        aria-label="Remove image"
                       >
                         <FiX size={16} />
                       </button>
@@ -243,7 +259,7 @@ const AdminDashboard = () => {
                       <button
                         type="button"
                         onClick={() => open()}
-                        className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#F25822] transition-colors"
+                        className="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-[#F25822] transition-colors"
                       >
                         <div className="flex flex-col items-center">
                           <FiPlus className="text-gray-400 mb-2" size={24} />
@@ -273,7 +289,7 @@ const AdminDashboard = () => {
                         name="name"
                         value={formData.name || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -286,7 +302,7 @@ const AdminDashboard = () => {
                         name="role"
                         value={formData.role || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -299,7 +315,7 @@ const AdminDashboard = () => {
                         value={formData.description || ""}
                         onChange={handleInputChange}
                         rows={3}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -331,7 +347,7 @@ const AdminDashboard = () => {
                         name="name"
                         value={formData.name || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -344,7 +360,7 @@ const AdminDashboard = () => {
                         name="email"
                         value={formData.email || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -357,7 +373,7 @@ const AdminDashboard = () => {
                         name="phone"
                         value={formData.phone || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -370,7 +386,7 @@ const AdminDashboard = () => {
                         name="address"
                         value={formData.address || ""}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -383,7 +399,7 @@ const AdminDashboard = () => {
                         value={formData.story || ""}
                         onChange={handleInputChange}
                         rows={3}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822]"
+                        className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
                         required
                       />
                     </div>
@@ -408,20 +424,20 @@ const AdminDashboard = () => {
               </div>
 
               {/* Form Actions */}
-              <div className="flex justify-end space-x-3 mt-8 pt-4 border-t border-gray-100">
+              <div className="flex justify-end space-x-3 mt-6 sm:mt-8 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                  className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm sm:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-[#F25822] text-white rounded-lg hover:bg-[#e04e1a] disabled:opacity-50"
+                  className="px-4 sm:px-6 py-2 bg-[#F25822] text-white rounded-lg hover:bg-[#e04e1a] disabled:opacity-50 text-sm sm:text-base"
                   disabled={!imageUrl}
                 >
                   Save {activeTab === "teams" ? "Member" : "Vendor"}
@@ -438,21 +454,21 @@ const AdminDashboard = () => {
 // Team Grid Component
 const TeamGrid = ({ data }: { data: any[] }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {data.map((item) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {data?.map((item) => (
         <div
           key={item._id}
           className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
         >
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex flex-col items-center text-center">
-              <div className="relative mb-4">
+              <div className="relative mb-3 sm:mb-4">
                 <CldImage
                   width="120"
                   height="120"
                   src={item.avatar}
                   alt={item.name}
-                  className="rounded-full object-cover w-24 h-24 border-2 border-[#F25822]"
+                  className="rounded-full object-cover w-20 h-20 sm:w-24 sm:h-24 border-2 border-[#F25822]"
                 />
                 {item.isCoFounder && (
                   <span className="absolute bottom-0 right-0 bg-[#F25822] text-white text-xs px-2 py-1 rounded-full">
@@ -460,20 +476,22 @@ const TeamGrid = ({ data }: { data: any[] }) => {
                   </span>
                 )}
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800">
                 {item.name}
               </h3>
-              <p className="text-[#F25822] font-medium">{item.role}</p>
-              <p className="text-gray-500 mt-2 text-sm line-clamp-2">
+              <p className="text-[#F25822] font-medium text-sm sm:text-base">
+                {item.role}
+              </p>
+              <p className="text-gray-500 mt-2 text-xs sm:text-sm line-clamp-2">
                 {item.description}
               </p>
             </div>
           </div>
-          <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-between">
-            <button className="text-sm text-[#F25822] hover:underline">
+          <div className="bg-gray-50 px-4 sm:px-6 py-2 sm:py-3 border-t border-gray-100 flex justify-between">
+            <button className="text-xs sm:text-sm text-[#F25822] hover:underline">
               Edit
             </button>
-            <button className="text-sm text-gray-500 hover:text-red-500">
+            <button className="text-xs sm:text-sm text-gray-500 hover:text-red-500">
               Delete
             </button>
           </div>
@@ -486,13 +504,13 @@ const TeamGrid = ({ data }: { data: any[] }) => {
 // Vendor Grid Component
 const VendorGrid = ({ data }: { data: any[] }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {data.map((item) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      {data?.map((item) => (
         <div
           key={item._id}
           className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
         >
-          <div className="h-40 bg-gray-100 relative">
+          <div className="h-32 sm:h-40 bg-gray-100 relative">
             <CldImage
               fill
               src={item.image}
@@ -505,19 +523,25 @@ const VendorGrid = ({ data }: { data: any[] }) => {
               </span>
             )}
           </div>
-          <div className="p-4">
-            <h3 className="font-semibold text-gray-800">{item.name}</h3>
-            <p className="text-gray-500 text-sm mt-1">{item.email}</p>
-            <p className="text-gray-500 text-sm mt-1">{item.phone}</p>
-            <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+          <div className="p-3 sm:p-4">
+            <h3 className="font-semibold text-gray-800 text-sm sm:text-base">
+              {item.name}
+            </h3>
+            <p className="text-gray-500 text-xs sm:text-sm mt-1 truncate">
+              {item.email}
+            </p>
+            <p className="text-gray-500 text-xs sm:text-sm mt-1">
+              {item.phone}
+            </p>
+            <p className="text-gray-600 text-xs sm:text-sm mt-2 line-clamp-2">
               {item.story}
             </p>
           </div>
-          <div className="bg-gray-50 px-4 py-2 border-t border-gray-100 flex justify-between">
-            <button className="text-sm text-[#F25822] hover:underline">
+          <div className="bg-gray-50 px-3 sm:px-4 py-2 border-t border-gray-100 flex justify-between">
+            <button className="text-xs sm:text-sm text-[#F25822] hover:underline">
               Edit
             </button>
-            <button className="text-sm text-gray-500 hover:text-red-500">
+            <button className="text-xs sm:text-sm text-gray-500 hover:text-red-500">
               Delete
             </button>
           </div>
