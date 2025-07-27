@@ -51,20 +51,22 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-wrap justify-center md:justify-start gap-4"
             >
-              <motion.button
+              <motion.a
+                href="https://whatsapp.com/channel/0029Vb5wOq335fLyhOGwyI0S"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-deep-brown transition duration-300 flex items-center cursor-pointer"
               >
                 <FaStore className="mr-2" /> Explore the Marketplace
-              </motion.button>
-              <motion.button
+              </motion.a>
+              <motion.a
+                href="/#become-a-vendor"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-6 py-3 bg-olive-green text-white rounded-full font-medium hover:bg-deep-brown transition duration-300 flex items-center cursor-pointer"
               >
                 <FaUserPlus className="mr-2" /> Join as a Vendor
-              </motion.button>
+              </motion.a>
             </motion.div>
           </div>
 

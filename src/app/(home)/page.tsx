@@ -5,7 +5,6 @@ import About from "@/components/About";
 import BecomeVendorSection from "@/components/BecomeVendor";
 import ContactSection from "@/components/Contacts";
 import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import TagLine from "@/components/TagLine";
 import TeamPreview from "@/components/Team";
@@ -59,7 +58,7 @@ export default function Home() {
           content="Building Africa's Grassroots Trade Network"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" />
       </Head>
 
       <main>

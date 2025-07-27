@@ -6,6 +6,9 @@ import Header from "@/components/Header";
 export const metadata: Metadata = {
   title: "Kasuana Trade Network",
   description: "Building Africa's Grassroots Trade Network",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
