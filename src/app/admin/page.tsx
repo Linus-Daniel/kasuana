@@ -1,7 +1,8 @@
 "use client";
 import api from "@/lib/axiosInstance";
 import { CldUploadWidget, CldImage } from "next-cloudinary";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   FiPlus,
   FiX,
@@ -9,10 +10,12 @@ import {
   FiTruck,
   FiSettings,
   FiLogOut,
+  FiHome,
 } from "react-icons/fi";
-import { HiOutlineMenuAlt2, HiOutlineChevronDown } from "react-icons/hi";
+import { HiOutlineMenuAlt2 } from "react-icons/hi";
 
 const AdminDashboard = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"teams" | "vendors">("teams");
   const [showModal, setShowModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -20,6 +23,25 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState<any>({});
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        mobileMenuOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   // Fetch data based on active tab
   useEffect(() => {
@@ -28,7 +50,7 @@ const AdminDashboard = () => {
       try {
         const endpoint = activeTab === "teams" ? "/teams" : "/vendors";
         const res = await api.get(endpoint);
-        console.log(res)
+        console.log(res);
         const data = await res.data;
         setData(data);
       } catch (error) {
@@ -83,7 +105,7 @@ const AdminDashboard = () => {
 
   const handleTabChange = (tab: "teams" | "vendors") => {
     setActiveTab(tab);
-    setMobileMenuOpen(false); // Close sidebar on mobile when tab is changed
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -99,19 +121,38 @@ const AdminDashboard = () => {
             <HiOutlineMenuAlt2 size={24} />
           </button>
           <h1 className="text-xl font-bold text-[#F25822]">Admin Dashboard</h1>
-          <div className="w-6"></div> {/* Spacer */}
+          <div className="w-6"></div>
         </div>
       </div>
 
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
         className={`fixed top-0 left-0 bottom-0 w-64 bg-white shadow-lg transform ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-transform duration-200 ease-in-out z-20`}
       >
-        <div className="p-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-[#F25822]">Admin Panel</h2>
+        {/* Close button for mobile */}
+        <div className="lg:hidden absolute top-4 right-4">
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-gray-500 hover:text-gray-700"
+            aria-label="Close menu"
+          >
+            <FiX size={24} />
+          </button>
         </div>
+
+        <div className="p-6 border-b border-gray-100">
+          <button
+            onClick={() => router.push("/")}
+            className="flex items-center text-xl font-bold text-[#F25822] hover:text-[#e04e1a] transition-colors"
+          >
+            <FiHome className="mr-2" />
+            Admin Panel
+          </button>
+        </div>
+
         <nav className="p-4">
           <button
             onClick={() => handleTabChange("teams")}

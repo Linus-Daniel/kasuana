@@ -125,7 +125,7 @@ const ContactSection = () => {
                         Location
                       </h4>
                       <p className="text-gray-700">
-                        Abubakar Tafawa Balewa University, Bauchi, Nigeria
+                        Bauchi, Bauchi state, Nigeria
                       </p>
                     </div>
                   </div>

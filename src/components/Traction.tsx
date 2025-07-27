@@ -80,7 +80,7 @@ export default function TractionSection() {
             <div className="w-12 h-12 mx-auto bg-primary rounded-full flex items-center justify-center mb-4">
               <FaUsersViewfinder className="text-white text-xl" />
             </div>
-            <p className="text-3xl font-bold text-deep-brown mb-2">500+</p>
+            <p className="text-3xl font-bold text-deep-brown mb-2">400+</p>
             <p className="text-gray-700">Community Reach</p>
           </div>
         </div>
