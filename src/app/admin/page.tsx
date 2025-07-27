@@ -23,6 +23,7 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState<any>({});
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null); // For editing
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Close sidebar when clicking outside on mobile
@@ -50,7 +51,6 @@ const AdminDashboard = () => {
       try {
         const endpoint = activeTab === "teams" ? "/teams" : "/vendors";
         const res = await api.get(endpoint);
-        console.log(res);
         const data = await res.data;
         setData(data);
       } catch (error) {
@@ -61,21 +61,6 @@ const AdminDashboard = () => {
     };
     fetchData();
   }, [activeTab]);
-
-   const handleDeleteTeam = async (id: string) => {
-     const yes = window.confirm("Delete this team member permanently?");
-     if (!yes) return;
-
-     try {
-       await api.delete("/teams", { params: { id } });
-
-       // remove from UI
-       setData((prev) => prev.filter((m) => m._id !== id));
-     } catch (err) {
-       console.error("Failed to delete team member:", err);
-       alert("Failed to delete team member. Please try again.");
-     }
-   };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -90,21 +75,38 @@ const AdminDashboard = () => {
     });
   };
 
+  const resetForm = () => {
+    setFormData({});
+    setImageUrl("");
+    setEditingId(null);
+  };
+
+  // Add / Edit Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const endpoint = activeTab === "teams" ? "/api/teams" : "/api/vendors";
+      const endpoint =
+        activeTab === "teams"
+          ? `/api/teams${editingId ? `?id=${editingId}` : ""}`
+          : `/api/vendors${editingId ? `?id=${editingId}` : ""}`;
+      const method = editingId ? "PUT" : "POST";
       const payload = { ...formData, image: imageUrl };
 
       const response = await fetch(endpoint, {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        const newItem = await response.json();
-        setData([...data, newItem]);
+        const updatedItem = await response.json();
+        if (editingId) {
+          setData((prev) =>
+            prev.map((item) => (item._id === editingId ? updatedItem : item))
+          );
+        } else {
+          setData([...data, updatedItem]);
+        }
         resetForm();
         setShowModal(false);
       }
@@ -113,15 +115,43 @@ const AdminDashboard = () => {
     }
   };
 
-  const resetForm = () => {
-    setFormData({});
-    setImageUrl("");
-  };
-
   const handleTabChange = (tab: "teams" | "vendors") => {
     setActiveTab(tab);
     setMobileMenuOpen(false);
   };
+
+  // Delete Handler
+  const handleDeleteTeam = async (id: string) => {
+    const yes = window.confirm("Delete this team member permanently?");
+    if (!yes) return;
+
+    try {
+      await api.delete("/teams", { params: { id } });
+      setData((prev) => prev.filter((m) => m._id !== id));
+    } catch (err) {
+      console.error("Failed to delete team member:", err);
+      alert("Failed to delete team member. Please try again.");
+    }
+  };
+
+  // Edit Handler
+  const handleEditClick = (item: any) => {
+    setFormData(item);
+    setImageUrl(item.image || item.avatar || "");
+    setEditingId(item._id);
+    setShowModal(true);
+  };
+
+  const modalTitle =
+    editingId && activeTab === "teams"
+      ? "Edit Team Member"
+      : editingId && activeTab === "vendors"
+      ? "Edit Vendor"
+      : activeTab === "teams"
+      ? "Add Team Member"
+      : "Add Vendor";
+
+  const modalSaveText = editingId ? "Save Changes" : "Save";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -211,51 +241,60 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-        <main className="lg:ml-64 pt-16 lg:pt-0">
-          <div className="p-4 sm:p-6">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 sm:mb-8">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
-                  {activeTab}
-                </h1>
-                <p className="text-gray-500 text-sm sm:text-base">
-                  Manage your{" "}
-                  {activeTab === "teams" ? "team members" : "vendors"}
-                </p>
-              </div>
+      <main className="lg:ml-64 pt-16 lg:pt-0">
+        <div className="p-4 sm:p-6">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 sm:mb-8">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 capitalize">
+                {activeTab}
+              </h1>
+              <p className="text-gray-500 text-sm sm:text-base">
+                Manage your {activeTab === "teams" ? "team members" : "vendors"}
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                resetForm();
+                setShowModal(true);
+              }}
+              className="mt-4 md:mt-0 flex items-center bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
+            >
+              <FiPlus className="mr-2" />
+              Add {activeTab === "teams" ? "Team Member" : "Vendor"}
+            </button>
+          </div>
+
+          {/* Content */}
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25822]"></div>
+            </div>
+          ) : data.length === 0 ? (
+            <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center">
+              <p className="text-gray-500">No {activeTab} found</p>
               <button
-                onClick={() => setShowModal(true)}
-                className="mt-4 md:mt-0 flex items-center bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
+                onClick={() => {
+                  resetForm();
+                  setShowModal(true);
+                }}
+                className="mt-4 bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
               >
-                <FiPlus className="mr-2" />
-                Add {activeTab === "teams" ? "Team Member" : "Vendor"}
+                Create your first{" "}
+                {activeTab === "teams" ? "team member" : "vendor"}
               </button>
             </div>
-
-            {/* Content */}
-            {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#F25822]"></div>
-              </div>
-            ) : data.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center">
-                <p className="text-gray-500">No {activeTab} found</p>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="mt-4 bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
-                >
-                  Create your first{" "}
-                  {activeTab === "teams" ? "team member" : "vendor"}
-                </button>
-              </div>
-            ) : activeTab === "teams" ? (
-              <TeamGrid data={data} onDelete={handleDeleteTeam} />
-            ) : (
-              <VendorGrid data={data} />
-            )}
-          </div>
-        </main>
+          ) : activeTab === "teams" ? (
+            <TeamGrid
+              data={data}
+              onDelete={handleDeleteTeam}
+              onEdit={handleEditClick}
+            />
+          ) : (
+            <VendorGrid data={data} />
+          )}
+        </div>
+      </main>
 
       {/* Modal */}
       {showModal && (
@@ -263,7 +302,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100">
               <h2 className="text-lg sm:text-xl font-bold text-gray-800">
-                Add {activeTab === "teams" ? "Team Member" : "Vendor"}
+                {modalTitle}
               </h2>
               <button
                 onClick={() => {
@@ -277,6 +316,7 @@ const AdminDashboard = () => {
               </button>
             </div>
 
+            {/* Form */}
             <form onSubmit={handleSubmit} className="p-4 sm:p-6">
               {/* Image Upload */}
               <div className="mb-6">
@@ -333,7 +373,7 @@ const AdminDashboard = () => {
                 )}
               </div>
 
-              {/* Form Fields */}
+              {/* Fields */}
               <div className="space-y-4">
                 {activeTab === "teams" ? (
                   <>
@@ -395,6 +435,7 @@ const AdminDashboard = () => {
                   </>
                 ) : (
                   <>
+                    {/* Vendors fields */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Business Name*
@@ -449,7 +490,7 @@ const AdminDashboard = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Business Story*
+                        Business Story
                       </label>
                       <textarea
                         name="story"
@@ -457,47 +498,29 @@ const AdminDashboard = () => {
                         onChange={handleInputChange}
                         rows={3}
                         className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#F25822] focus:border-[#F25822] text-sm sm:text-base"
-                        required
                       />
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="verified"
-                        checked={formData.verified || false}
-                        onChange={handleInputChange}
-                        id="verified"
-                        className="h-4 w-4 text-[#F25822] focus:ring-[#F25822] border-gray-300 rounded"
-                      />
-                      <label
-                        htmlFor="verified"
-                        className="ml-2 block text-sm text-gray-700"
-                      >
-                        Verified Vendor
-                      </label>
                     </div>
                   </>
                 )}
               </div>
 
-              {/* Form Actions */}
-              <div className="flex justify-end space-x-3 mt-6 sm:mt-8 pt-4 border-t border-gray-100">
+              {/* Buttons */}
+              <div className="flex justify-end gap-2 sm:gap-3 mt-6">
                 <button
                   type="button"
                   onClick={() => {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm sm:text-base"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm sm:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 sm:px-6 py-2 bg-[#F25822] text-white rounded-lg hover:bg-[#e04e1a] disabled:opacity-50 text-sm sm:text-base"
-                  disabled={!imageUrl}
+                  className="bg-[#F25822] text-white px-4 py-2 rounded-lg hover:bg-[#e04e1a] transition-colors text-sm sm:text-base"
                 >
-                  Save {activeTab === "teams" ? "Member" : "Vendor"}
+                  {modalSaveText}
                 </button>
               </div>
             </form>
@@ -508,14 +531,15 @@ const AdminDashboard = () => {
   );
 };
 
-// Team Grid Component
-// Team Grid Component
+// === TEAM GRID COMPONENT ===
 const TeamGrid = ({
   data,
   onDelete,
+  onEdit,
 }: {
   data: any[];
-  onDelete: (id: string) => Promise<void> | void;
+  onDelete: (id: string) => void;
+  onEdit: (item: any) => void;
 }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -525,34 +549,28 @@ const TeamGrid = ({
           className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
         >
           <div className="p-4 sm:p-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="relative mb-3 sm:mb-4">
-                <CldImage
-                  width="120"
-                  height="120"
-                  src={item.avatar ?? item.image} // just in case your field is image
-                  alt={item.name}
-                  className="rounded-full object-cover w-20 h-20 sm:w-24 sm:h-24 border-2 border-[#F25822]"
-                />
-                {item.isCoFounder && (
-                  <span className="absolute bottom-0 right-0 bg-[#F25822] text-white text-xs px-2 py-1 rounded-full">
-                    Co-Founder
-                  </span>
-                )}
+            <div className="flex items-center mb-4">
+              <img
+                src={item.image || "/default-avatar.png"}
+                alt={item.name}
+                className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 mr-4"
+              />
+              <div>
+                <h3 className="font-semibold text-lg text-gray-800">
+                  {item.name}
+                </h3>
+                <p className="text-sm text-gray-500">{item.role}</p>
               </div>
-              <h3 className="text-base sm:text-lg font-semibold text-gray-800">
-                {item.name}
-              </h3>
-              <p className="text-[#F25822] font-medium text-sm sm:text-base">
-                {item.role}
-              </p>
-              <p className="text-gray-500 mt-2 text-xs sm:text-sm line-clamp-2">
-                {item.description}
-              </p>
             </div>
+            <p className="text-gray-600 text-sm line-clamp-3">
+              {item.description}
+            </p>
           </div>
           <div className="bg-gray-50 px-4 sm:px-6 py-2 sm:py-3 border-t border-gray-100 flex justify-between">
-            <button className="text-xs sm:text-sm text-[#F25822] hover:underline">
+            <button
+              className="text-xs sm:text-sm text-[#F25822] hover:underline"
+              onClick={() => onEdit(item)}
+            >
               Edit
             </button>
             <button
@@ -568,49 +586,26 @@ const TeamGrid = ({
   );
 };
 
-// Vendor Grid Component
+// === VENDOR GRID COMPONENT ===
 const VendorGrid = ({ data }: { data: any[] }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-      {data?.map((item) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {data?.map((vendor) => (
         <div
-          key={item._id}
+          key={vendor._id}
           className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
         >
-          <div className="h-32 sm:h-40 bg-gray-100 relative">
-            <CldImage
-              fill
-              src={item.image}
-              alt={item.name}
-              className="object-cover"
+          <div className="p-4 sm:p-6">
+            <img
+              src={vendor.image || "/default-avatar.png"}
+              alt={vendor.name}
+              className="w-full h-40 object-cover rounded-lg mb-4"
             />
-            {item.verified && (
-              <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                Verified
-              </span>
-            )}
-          </div>
-          <div className="p-3 sm:p-4">
-            <h3 className="font-semibold text-gray-800 text-sm sm:text-base">
-              {item.name}
+            <h3 className="font-semibold text-lg text-gray-800">
+              {vendor.name}
             </h3>
-            <p className="text-gray-500 text-xs sm:text-sm mt-1 truncate">
-              {item.email}
-            </p>
-            <p className="text-gray-500 text-xs sm:text-sm mt-1">
-              {item.phone}
-            </p>
-            <p className="text-gray-600 text-xs sm:text-sm mt-2 line-clamp-2">
-              {item.story}
-            </p>
-          </div>
-          <div className="bg-gray-50 px-3 sm:px-4 py-2 border-t border-gray-100 flex justify-between">
-            <button className="text-xs sm:text-sm text-[#F25822] hover:underline">
-              Edit
-            </button>
-            <button className="text-xs sm:text-sm text-gray-500 hover:text-red-500">
-              Delete
-            </button>
+            <p className="text-sm text-gray-500 mb-2">{vendor.email}</p>
+            <p className="text-gray-600 text-sm">{vendor.address}</p>
           </div>
         </div>
       ))}

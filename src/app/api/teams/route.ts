@@ -85,3 +85,37 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
+
+
+export async function PUT(req: NextRequest) {
+  try {
+    await dbConnect();
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Team member ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const body = await req.json();
+    const updatedMember = await Team.findByIdAndUpdate(id, body, { new: true });
+
+    if (!updatedMember) {
+      return NextResponse.json(
+        { error: "Team member not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedMember, { status: 200 });
+  } catch (error) {
+    console.error("Error updating team member:", error);
+    return NextResponse.json(
+      { error: "Failed to update team member" },
+      { status: 500 }
+    );
+  }
+}
