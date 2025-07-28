@@ -67,7 +67,7 @@ export default function Home() {
         <WhyKasuana />
         <About />
         <TeamPreview members={teamData} />
-        <TractionSection />
+        <TractionSection teamData={teamData} />
         <BecomeVendorSection />
         <VendorsPreview vendors={vendorsData} />
         <ContactSection />

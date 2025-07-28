@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import {
   FaWhatsapp,
@@ -193,28 +194,14 @@ export default function Footer() {
           </div>
 
           {/* Subscribe */}
-          <div>
-            <h3 className="text-xl font-semibold mb-4 text-soft-yellow">
-              Subscribe
-            </h3>
-            <p className="text-white opacity-80 mb-4">
-              Stay updated with our latest news and offers.
-            </p>
-            <form>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="px-4 py-2 rounded-l-md w-full focus:outline-none text-gray-800"
-                />
-                <button
-                  type="submit"
-                  className="bg-primary hover:bg-soft-yellow text-white hover:text-deep-brown px-4 py-2 rounded-r-md transition duration-300"
-                >
-                  <FaPaperPlane />
-                </button>
-              </div>
-            </form>
+          <div className="flex items-center h-full w-full bg-warm-white justify-center rounded-md shadow-md ">
+            
+            <Image
+            src={"/images/logo.png"}
+            alt="logo"
+            width={200}
+            height={200}
+            />
           </div>
         </div>
 
@@ -222,7 +209,7 @@ export default function Footer() {
         <div className="border-t border-gray-700 pt-6 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-white opacity-80 text-sm mb-4 md:mb-0">
-              © 2025 Kasuana Trade Network. All rights reserved.
+              © 2025 Kasuana Trade Network Limited. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link

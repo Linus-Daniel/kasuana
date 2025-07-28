@@ -2,6 +2,7 @@
 
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
+import TeamCard from "./TeamCard";
 
 export interface TeamMember {
   id: string;
@@ -21,8 +22,10 @@ export default function TeamPreview({
   members,
   maxDisplayCount = 4,
 }: TeamPreviewProps) {
+  const founder = members.find((m) => m.role.includes("Founder"));
+  console.log("Founder:", founder);
   const coFounders = members.filter((m) => m.isCoFounder);
-  const others = members.filter((m) => !m.isCoFounder);
+  const others = members.filter((m) => !m.isCoFounder && m !== founder);
 
   const displayedMembers = [...coFounders, ...others].slice(0, maxDisplayCount);
 
@@ -37,35 +40,9 @@ export default function TeamPreview({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {displayedMembers.map((member) => (
-            <div
-              key={member.id}
-              className="bg-white rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-shadow"
-            >
-              <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-4 border-2 border-primary">
-                <CldImage
-                  width="200"
-                  height="200"
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              <h3 className="font-semibold text-deep-brown text-lg">
-                {member.name}
-              </h3>
-
-              {member.isCoFounder && (
-                <span className="inline-block px-3 py-1 bg-primary text-white text-sm rounded-full my-2">
-                  Co-Founder
-                </span>
-              )}
-
-              <p className="text-gray-600 text-sm line-clamp-2">
-                {member.description}
-              </p>
-            </div>
+          <TeamCard member={founder as TeamMember}  />
+          {displayedMembers.map((member,index) => (
+            <TeamCard member={member} key={index} />
           ))}
         </div>
       </div>

@@ -104,7 +104,7 @@ const ContactSection = () => {
                         WhatsApp
                       </h4>
                       <a
-                        href="https://chat.whatsapp.com/LuXKum1nuDhLrDS2JUqt5y?mode=ac_t"
+                        href="https://wa.me/message/DX53H2HA6P7OC1"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center px-4 py-2 bg-olive-green text-white rounded-full text-sm mt-1 hover:bg-deep-brown transition duration-300"

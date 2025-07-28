@@ -8,7 +8,7 @@ import {
   FaLightbulb,
 } from "react-icons/fa6";
 
-export default function TractionSection() {
+export default function TractionSection({teamData}:{teamData: { id: string; name: string; role: string; description: string; image: string; isCoFounder?: boolean; }[]}) {
   return (
     <section id="traction" className="py-16 bg-beige">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,7 +61,7 @@ export default function TractionSection() {
               <FaWhatsapp className="text-white text-2xl" />
             </div>
             <p className="text-3xl font-bold text-deep-brown mb-2">100+</p>
-            <p className="text-gray-700">WhatsApp Followers</p>
+            <p className="text-gray-700">WhatsApp channel</p>
           </div>
           <div
             id="stat-6"
@@ -70,8 +70,8 @@ export default function TractionSection() {
             <div className="w-12 h-12 mx-auto bg-primary rounded-full flex items-center justify-center mb-4">
               <FaUsers className="text-white text-xl" />
             </div>
-            <p className="text-3xl font-bold text-deep-brown mb-2">5</p>
-            <p className="text-gray-700">Team Admins</p>
+            <p className="text-3xl font-bold text-deep-brown mb-2">{teamData?.length}</p>
+            <p className="text-gray-700">Team</p>
           </div>
           <div
             id="stat-7"

@@ -61,7 +61,7 @@ export default function BecomeVendorSection() {
                   },
                   {
                     id: "institution",
-                    label: "School / Institution",
+                    label: "School / Institution (optional)",
                     type: "text",
                   },
                   { id: "businessName", label: "Business Name", type: "text" },
