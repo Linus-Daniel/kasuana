@@ -17,7 +17,9 @@ export default function TeamPage() {
   const [teamData, setTeamData] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const team = teamData.find((member) => member.role.includes("Founder"));
+  const team = teamData.filter((member) => !member.role.includes("Founder"));
+  const founder = teamData.find((member) => member.role.includes("Founder "));
+
   console.log("Team Member:", team);
 
   useEffect(() => {
@@ -51,7 +53,8 @@ export default function TeamPage() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {teamData.map((member,index) => (
+          <TeamCard member={founder as TeamMember} />
+          {team.map((member,index) => (
             <TeamCard member={member} key={index} />
           ))}
         </div>
