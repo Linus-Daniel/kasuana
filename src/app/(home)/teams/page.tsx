@@ -20,7 +20,6 @@ export default function TeamPage() {
   const team = teamData.filter((member) => !member.role.includes("Founder"));
   const founder = teamData.find((member) => member.role.includes("Founder "));
 
-  console.log("Team Member:", team);
 
   useEffect(() => {
     const fetchTeamData = async () => {

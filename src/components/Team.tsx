@@ -23,7 +23,6 @@ export default function TeamPreview({
   maxDisplayCount = 4,
 }: TeamPreviewProps) {
   const founder = members.find((m) => m.role.includes("Founder"));
-  console.log("Founder:", founder);
   const coFounders = members.filter((m) => m.isCoFounder);
   const others = members.filter((m) => !m.isCoFounder && m !== founder);
 
