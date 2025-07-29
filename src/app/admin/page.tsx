@@ -23,10 +23,9 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState<any>({});
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null); // For editing
+  const [editingId, setEditingId] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -44,7 +43,6 @@ const AdminDashboard = () => {
     };
   }, [mobileMenuOpen]);
 
-  // Fetch data based on active tab
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -81,7 +79,6 @@ const AdminDashboard = () => {
     setEditingId(null);
   };
 
-  // Add / Edit Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -120,7 +117,6 @@ const AdminDashboard = () => {
     setMobileMenuOpen(false);
   };
 
-  // Delete Handler
   const handleDeleteTeam = async (id: string) => {
     const yes = window.confirm("Delete this team member permanently?");
     if (!yes) return;
@@ -134,7 +130,19 @@ const AdminDashboard = () => {
     }
   };
 
-  // Edit Handler
+  const handleDeleteVendor = async (id: string) => {
+    const yes = window.confirm("Delete this vendor permanently?");
+    if (!yes) return;
+
+    try {
+      await api.delete("/vendors", { params: { id } });
+      setData((prev) => prev.filter((v) => v._id !== id));
+    } catch (err) {
+      console.error("Failed to delete vendor:", err);
+      alert("Failed to delete vendor. Please try again.");
+    }
+  };
+
   const handleEditClick = (item: any) => {
     setFormData(item);
     setImageUrl(item.image || item.avatar || "");
@@ -177,7 +185,6 @@ const AdminDashboard = () => {
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-transform duration-200 ease-in-out z-20`}
       >
-        {/* Close button for mobile */}
         <div className="lg:hidden absolute top-4 right-4">
           <button
             onClick={() => setMobileMenuOpen(false)}
@@ -291,7 +298,11 @@ const AdminDashboard = () => {
               onEdit={handleEditClick}
             />
           ) : (
-            <VendorGrid data={data} />
+            <VendorGrid
+              data={data}
+              onDelete={handleDeleteVendor}
+              onEdit={handleEditClick}
+            />
           )}
         </div>
       </main>
@@ -316,9 +327,7 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="p-4 sm:p-6">
-              {/* Image Upload */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {activeTab === "teams" ? "Profile Image" : "Logo/Image"}
@@ -373,7 +382,6 @@ const AdminDashboard = () => {
                 )}
               </div>
 
-              {/* Fields */}
               <div className="space-y-4">
                 {activeTab === "teams" ? (
                   <>
@@ -435,7 +443,6 @@ const AdminDashboard = () => {
                   </>
                 ) : (
                   <>
-                    {/* Vendors fields */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Business Name*
@@ -504,7 +511,6 @@ const AdminDashboard = () => {
                 )}
               </div>
 
-              {/* Buttons */}
               <div className="flex justify-end gap-2 sm:gap-3 mt-6">
                 <button
                   type="button"
@@ -531,7 +537,6 @@ const AdminDashboard = () => {
   );
 };
 
-// === TEAM GRID COMPONENT ===
 const TeamGrid = ({
   data,
   onDelete,
@@ -586,26 +591,45 @@ const TeamGrid = ({
   );
 };
 
-// === VENDOR GRID COMPONENT ===
-const VendorGrid = ({ data }: { data: any[] }) => {
+const VendorGrid = ({
+  data,
+  onDelete,
+  onEdit,
+}: {
+  data: any[];
+  onDelete: (id: string) => void;
+  onEdit: (item: any) => void;
+}) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-      {data?.map((vendor) => (
+      {data?.map((item) => (
         <div
-          key={vendor._id}
+          key={item._id}
           className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow"
         >
           <div className="p-4 sm:p-6">
             <img
-              src={vendor.image || "/default-avatar.png"}
-              alt={vendor.name}
+              src={item.image || "/default-avatar.png"}
+              alt={item.name}
               className="w-full h-40 object-cover rounded-lg mb-4"
             />
-            <h3 className="font-semibold text-lg text-gray-800">
-              {vendor.name}
-            </h3>
-            <p className="text-sm text-gray-500 mb-2">{vendor.email}</p>
-            <p className="text-gray-600 text-sm">{vendor.address}</p>
+            <h3 className="font-semibold text-lg text-gray-800">{item.name}</h3>
+            <p className="text-sm text-gray-500 mb-2">{item.email}</p>
+            <p className="text-gray-600 text-sm">{item.address}</p>
+          </div>
+          <div className="bg-gray-50 px-4 sm:px-6 py-2 sm:py-3 border-t border-gray-100 flex justify-between">
+            <button
+              className="text-xs sm:text-sm text-[#F25822] hover:underline"
+              onClick={() => onEdit(item)}
+            >
+              Edit
+            </button>
+            <button
+              className="text-xs sm:text-sm text-gray-500 hover:text-red-500"
+              onClick={() => onDelete(item._id)}
+            >
+              Delete
+            </button>
           </div>
         </div>
       ))}

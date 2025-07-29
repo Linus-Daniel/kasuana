@@ -110,7 +110,7 @@ const ContactSection = () => {
                         className="inline-flex items-center px-4 py-2 bg-olive-green text-white rounded-full text-sm mt-1 hover:bg-deep-brown transition duration-300"
                       >
                         <FaWhatsapp className="mr-2" />
-                        Join Community
+                        Chat with us
                       </a>
                     </div>
                   </div>
