@@ -77,9 +77,16 @@ export default function VendorsPreview({ vendors }: { vendors: Vendor[] }) {
                   >
                     View Details
                   </button>
-                  <button className="flex items-center text-sm text-olive-green">
+                  <a
+                    href={`https://wa.me/${vendor.phone
+                      ?.replace(/\D/g, "")
+                      .slice(-10)}`}
+                    className="flex items-center text-sm text-olive-green"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <FaWhatsapp className="mr-1" /> Contact
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

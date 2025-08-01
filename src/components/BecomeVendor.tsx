@@ -20,6 +20,11 @@ export default function BecomeVendorSection() {
     businessName: "",
     flyer: null,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -31,10 +36,57 @@ export default function BecomeVendorSection() {
     }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(formData);
-    // TODO: Submit to API
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("type", "vendor");
+      formDataToSend.append("fullName", formData.fullName);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("institution", formData.institution);
+      formDataToSend.append("businessType", formData.businessType);
+      formDataToSend.append("businessName", formData.businessName);
+      if (formData.flyer) {
+        formDataToSend.append("flyer", formData.flyer);
+      }
+
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus({
+          success: true,
+          message: "Application submitted successfully!",
+        });
+        setFormData({
+          fullName: "",
+          phone: "",
+          institution: "",
+          businessType: "",
+          businessName: "",
+          flyer: null,
+        });
+      } else {
+        setSubmitStatus({
+          success: false,
+          message: result.error || "Failed to submit application",
+        });
+      }
+    } catch (error) {
+      setSubmitStatus({
+        success: false,
+        message: "An error occurred while submitting",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -48,6 +100,18 @@ export default function BecomeVendorSection() {
             Become part of our growing community of entrepreneurs and gain
             visibility for your business. It&apos;s free to join!
           </p>
+
+          {submitStatus && (
+            <div
+              className={`mb-6 p-4 rounded-md ${
+                submitStatus.success
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
+              {submitStatus.message}
+            </div>
+          )}
 
           <div className="bg-beige rounded-lg shadow-md p-8">
             <form id="vendor-form" onSubmit={handleSubmit}>
@@ -79,6 +143,7 @@ export default function BecomeVendorSection() {
                       value={(formData as any)[id]}
                       onChange={handleChange}
                       className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                      required={id !== "institution"}
                     />
                   </div>
                 ))}
@@ -95,6 +160,7 @@ export default function BecomeVendorSection() {
                     value={formData.businessType}
                     onChange={handleChange}
                     className="w-full px-4 py-2 text-deep-brown border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
                   >
                     <option value="">Select business type</option>
                     <option value="food">Food &amp; Beverages</option>
@@ -118,6 +184,7 @@ export default function BecomeVendorSection() {
                     type="file"
                     id="flyer"
                     onChange={handleChange}
+                    accept=".jpg,.jpeg,.png,.pdf"
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                 </div>
@@ -127,8 +194,9 @@ export default function BecomeVendorSection() {
                 <button
                   type="submit"
                   className="px-8 py-3 bg-primary text-white rounded-full font-medium hover:bg-deep-brown transition duration-300"
+                  disabled={isSubmitting}
                 >
-                  Submit Application
+                  {isSubmitting ? "Submitting..." : "Submit Application"}
                 </button>
               </div>
             </form>

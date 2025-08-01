@@ -9,8 +9,75 @@ import {
   FaLinkedin,
   FaXTwitter,
 } from "react-icons/fa6";
+import { useState, FormEvent } from "react";
 
 const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("type", "contact");
+      formDataToSend.append("name", formData.name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("message", formData.message);
+
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus({
+          success: true,
+          message: "Message sent successfully!",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus({
+          success: false,
+          message: result.error || "Failed to send message",
+        });
+      }
+    } catch (error) {
+      setSubmitStatus({
+        success: false,
+        message: "An error occurred while sending",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-16 bg-warm-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,13 +86,25 @@ const ContactSection = () => {
             Get In Touch
           </h2>
 
+          {submitStatus && (
+            <div
+              className={`mb-6 p-4 rounded-md ${
+                submitStatus.success
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
+              {submitStatus.message}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Contact Form */}
             <div className="bg-beige rounded-lg shadow-md p-8">
               <h3 className="text-xl font-semibold text-deep-brown mb-6">
                 Send Us a Message
               </h3>
-              <form id="contact-form">
+              <form id="contact-form" onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label
                     htmlFor="name"
@@ -36,7 +115,10 @@ const ContactSection = () => {
                   <input
                     type="text"
                     id="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
                   />
                 </div>
                 <div className="mb-4">
@@ -49,7 +131,10 @@ const ContactSection = () => {
                   <input
                     type="email"
                     id="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
                   />
                 </div>
                 <div className="mb-6">
@@ -62,14 +147,18 @@ const ContactSection = () => {
                   <textarea
                     id="message"
                     rows={5}
+                    value={formData.message}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
                   ></textarea>
                 </div>
                 <button
                   type="submit"
                   className="w-full px-6 py-3 bg-olive-green text-white rounded-full font-medium hover:bg-deep-brown transition duration-300"
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
             </div>
